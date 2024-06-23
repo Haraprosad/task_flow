@@ -1,0 +1,38 @@
+{
+    "error_messages": {
+      "network_error": "Unable to connect to the server. Please check your internet connection and try again.",
+      "timeout_error": "The request timed out. Please try again later.",
+      "server_error": "An unexpected server error occurred. Please try again later.",
+      "authentication_error": "Authentication failed. Please check your credentials and try again.",
+      "authorization_error": "You don't have permission to perform this action.",
+      "not_found_error": "The requested resource was not found.",
+      "validation_error": "The submitted data is invalid. Please check your input and try again.",
+      "rate_limit_error": "You've exceeded the rate limit. Please try again later.",
+      "bad_request_error": "The request was invalid or cannot be served.",
+      "conflict_error": "The request could not be completed due to a conflict with the current state of the resource.",
+      "service_unavailable": "The service is temporarily unavailable. Please try again later.",
+      "unknown_error": "An unknown error occurred. Please try again later.",
+      "parsing_error": "Unable to process the server response. Please try again later.",
+      "offline_error": "You're currently offline. Please check your internet connection and try again.",
+      "api_deprecated": "This API version is deprecated. Please update your application.",
+      "maintenance_error": "The service is currently under maintenance. Please try again later.",
+      "quota_exceeded": "Your API quota has been exceeded. Please try again later or upgrade your plan."
+    },
+    "error_actions": {
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "go_back": "Go Back",
+      "refresh": "Refresh",
+      "contact_support": "Contact Support"
+    },
+    "error_titles": {
+      "connection_error": "Connection Error",
+      "server_error": "Server Error",
+      "client_error": "Client Error",
+      "authentication_error": "Authentication Error",
+      "unknown_error": "Unknown Error"
+    },
+
+    "try_again_later":"Please try again later.",
+    "task_flow":"Task Flow"
+  }
