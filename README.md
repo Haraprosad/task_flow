@@ -1,6 +1,6 @@
-# Time Tracking App - Flutter Mobile Developer Take-Home Challenge
+# Time Tracking App (Task Flow)
 
-Welcome to the time tracking app take-home challenge for the Flutter mobile developer position. This document outlines the functionalities implemented in the app and the rules and best practices followed during development.
+This document outlines the functionalities implemented in the app and the rules and best practices followed during development.
 
 ## Functionalities Implemented
 
@@ -105,5 +105,5 @@ Welcome to the time tracking app take-home challenge for the Flutter mobile deve
 
 1. **Clone the Repository**
    ```sh
-   git clone <https://github.com/Haraprosad/task_flow.git>
+   git clone https://github.com/Haraprosad/task_flow.git
   

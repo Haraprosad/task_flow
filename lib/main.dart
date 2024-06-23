@@ -4,17 +4,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/config/observers/bloc_observer.dart';
+import 'package:task_flow/core/constants/app_text_styles.dart';
+import 'package:task_flow/core/di/injection.dart';
 import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/core/router/app_router.dart';
 import 'package:task_flow/core/l10n/app_localizations.dart';
+import 'package:task_flow/core/theme/theme_config.dart';
 //import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await EasyLocalization.ensureInitialized();
+    configureDependencies();
 
     // Set the global Bloc observer
     Bloc.observer = AppBlocObserver();
@@ -96,16 +101,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: "Task Flow",
-      routerConfig: AppRouter.routerConfig,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      builder: (_,child) {
+        return MaterialApp.router(
+          title: "Task Flow",
+          routerConfig: AppRouter.routerConfig,
+          theme: ThemeConfig.lightTheme,
+          darkTheme: ThemeConfig.darkTheme,
+          themeMode: ThemeMode.system,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+        );
+      }
     );
   }
 }
