@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/config/observers/bloc_observer.dart';
-import 'package:task_flow/core/constants/app_text_styles.dart';
 import 'package:task_flow/core/di/injection.dart';
 import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/core/router/app_router.dart';

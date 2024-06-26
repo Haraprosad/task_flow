@@ -21,7 +21,6 @@ final TextTheme lightTextTheme = TextTheme(
 );
 
 final ThemeData customLightTheme = ThemeData(
-  brightness: Brightness.light,
   colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
   textTheme: lightTextTheme,
   buttonTheme: ButtonThemeData(
