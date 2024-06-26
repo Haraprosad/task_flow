@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            LocalizationConstants.errorMessagesPrefix,
+            LocalizationConstants.taskFlow,
             style: context.headlineLarge,
           ).tr(),
         ),

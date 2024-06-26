@@ -78,7 +78,7 @@ void main() async {
             const Icon(Icons.error, size: 80, color: Colors.red),
             const SizedBox(height: 16),
             const Text(
-              LocalizationConstants.unknownErrorMessage,
+              LocalizationConstants.unknownError,
               style: TextStyle(fontSize: 18, color: Colors.black),
               textAlign: TextAlign.center,
             ).tr(),

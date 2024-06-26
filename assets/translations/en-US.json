@@ -1,7 +1,9 @@
 {
-    "error_messages": {
+  "error_messages": {
       "network_error": "Unable to connect to the server. Please check your internet connection and try again.",
-      "timeout_error": "The request timed out. Please try again later.",
+      "connection_timeout_error": "The connection timed out. Please try again later.",
+      "send_timeout_error": "The send timed out. Please try again later.",
+      "receive_timeout_error": "The receive timed out. Please try again later.",
       "server_error": "An unexpected server error occurred. Please try again later.",
       "authentication_error": "Authentication failed. Please check your credentials and try again.",
       "authorization_error": "You don't have permission to perform this action.",
@@ -16,23 +18,24 @@
       "offline_error": "You're currently offline. Please check your internet connection and try again.",
       "api_deprecated": "This API version is deprecated. Please update your application.",
       "maintenance_error": "The service is currently under maintenance. Please try again later.",
-      "quota_exceeded": "Your API quota has been exceeded. Please try again later or upgrade your plan."
+      "quota_exceeded": "Your API quota has been exceeded. Please try again later or upgrade your plan.",
+      "bad_certificate_error": "The server's certificate is invalid. Please try again later.",
+      "forbidden_error":"Access to the requested resource is forbidden. Please ensure you have proper authorization to perform this action."
     },
-    "error_actions": {
+  "error_actions": {
       "try_again": "Try Again",
       "cancel": "Cancel",
       "go_back": "Go Back",
       "refresh": "Refresh",
       "contact_support": "Contact Support"
-    },
-    "error_titles": {
+  },
+  "error_titles": {
       "connection_error": "Connection Error",
       "server_error": "Server Error",
       "client_error": "Client Error",
       "authentication_error": "Authentication Error",
       "unknown_error": "Unknown Error"
-    },
-
-    "try_again_later":"Please try again later.",
-    "task_flow":"Task Flow"
-  }
+  },
+  "try_again_later": "Please try again later.",
+  "task_flow": "Task Flow"
+}
