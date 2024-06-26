@@ -19,7 +19,7 @@
       "quota_exceeded": "Your API quota has been exceeded. Please try again later or upgrade your plan."
     },
     "error_actions": {
-      "retry": "Retry",
+      "try_again": "Try Again",
       "cancel": "Cancel",
       "go_back": "Go Back",
       "refresh": "Refresh",

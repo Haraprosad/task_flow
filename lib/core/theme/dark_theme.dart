@@ -22,5 +22,10 @@ final TextTheme darkTextTheme = TextTheme(
 
 final ThemeData customDarkTheme = ThemeData(
   brightness: Brightness.dark,
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
   textTheme: darkTextTheme,
+  buttonTheme: ButtonThemeData(
+    buttonColor: Colors.blue[900],
+    textTheme: ButtonTextTheme.primary,
+  ),
 );
