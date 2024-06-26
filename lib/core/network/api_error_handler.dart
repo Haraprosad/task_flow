@@ -7,7 +7,6 @@ import 'package:task_flow/core/network/network_info.dart';
 import 'package:task_flow/core/network/response_code.dart';
 
 class ApiErrorHandler {
-  
 
   Future<ApiError> handleError(dynamic error) async {
     if (error is DioException) {

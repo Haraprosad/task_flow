@@ -11,6 +11,9 @@
 migrate_working_dir/
 
 *.mocks.dart
+.env.development
+.env.production
+.env.staging
 
 
 # IntelliJ related

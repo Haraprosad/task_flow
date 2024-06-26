@@ -41,8 +41,8 @@ void main() {
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       final result = await apiClient.get<String>('test_path');
-      expect(result.isLeft(), true);
-      expect(result.fold((data) => data, (error) => error), 'test_data');
+      expect(result.isRight(), true);
+      expect(result.fold((error) => error, (data) => data), 'test_data');
     });
 
     test('get - should return NetworkError when no internet connection', () async {
@@ -50,8 +50,8 @@ void main() {
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
       final result = await apiClient.get<String>('test_path');
-      expect(result.isRight(), true);
-      expect(result.fold((data) => data, (error) => error), isA<NetworkError>());
+      expect(result.isLeft(), true);
+      expect(result.fold((error) => error, (data) => data), isA<NetworkError>());
     });
 
     test('get - should return ApiError on Dio error', () async {
@@ -72,9 +72,8 @@ void main() {
           .thenAnswer((_) async => ServerError(code: 500, message: 'Internal Server Error'));
 
       final result = await apiClient.get<String>('test_path');
-      expect(result.isRight(), true);
-      expect(result.fold((data) => data, (error) => error), isA<ServerError>());
+      expect(result.isLeft(), true);
+      expect(result.fold((error) => error, (data) => data), isA<ServerError>());
     });
-
   });
 }

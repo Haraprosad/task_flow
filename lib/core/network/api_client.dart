@@ -11,7 +11,6 @@ class ApiClient {
   final NetworkInfo _networkInfo;
 
   ApiClient(this._dio, this._errorHandler, this._networkInfo) {
-  
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         logger.i('Request: ${options.method} ${options.path}');
@@ -28,33 +27,33 @@ class ApiClient {
     ));
   }
 
-  Future<Either<T, ApiError>> get<T>(String path, {Map<String, dynamic>? queryParameters}) async {
+  Future<Either<ApiError,T>> get<T>(String path, {Map<String, dynamic>? queryParameters}) async {
     if (!(await _networkInfo.isConnected)) {
       logger.w('No internet connection');
-      return Right(NetworkError());
+      return Left(NetworkError());
     }
 
     try {
       final response = await _dio.get<T>(path, queryParameters: queryParameters);
-      return Left(response.data as T);
+      return Right(response.data as T);
     } catch (error) {
       final apiError = await _errorHandler.handleError(error);
-      return Right(apiError);
+      return Left(apiError);
     }
   }
 
-  Future<Either<T, ApiError>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters}) async {
+  Future<Either<ApiError,T>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters}) async {
     if (!(await _networkInfo.isConnected)) {
       logger.w('No internet connection');
-      return Right(NetworkError());
+      return Left(NetworkError());
     }
 
     try {
       final response = await _dio.post<T>(path, data: data, queryParameters: queryParameters);
-      return Left(response.data as T);
+      return Right(response.data as T);
     } catch (error) {
       final apiError = await _errorHandler.handleError(error);
-      return Right(apiError);
+      return Left(apiError);
     }
   }
 
