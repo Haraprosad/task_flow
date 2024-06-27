@@ -7,16 +7,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/config/observers/bloc_observer.dart';
+import 'package:task_flow/core/constants/key_constants.dart';
 import 'package:task_flow/core/di/injection.dart';
 import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/core/router/app_router.dart';
 import 'package:task_flow/core/l10n/app_localizations.dart';
 import 'package:task_flow/core/theme/theme_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:task_flow/flavors/env_config.dart';
+import 'package:task_flow/flavors/environment.dart';
 //import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    //Environment part
+    await dotenv.load(fileName: KeyConstants.envProduction);
+
+    EnvConfig.instantiate(
+        baseUrl: dotenv.env[KeyConstants.envKeyBaseUrl]!,
+        token: dotenv.env[KeyConstants.envKeyToken]!,
+        todoSectionId: dotenv.env[KeyConstants.envKeyTodoSectionId]!,
+        inProgressSectionId:
+            dotenv.env[KeyConstants.envKeyInProgressSectionId]!,
+        doneSectionId: dotenv.env[KeyConstants.envKeyDoneSectionId]!,
+        environmentType: EnvironmentType.PRODUCTION);
+
+    // Initialize logger
     await EasyLocalization.ensureInitialized();
     configureDependencies();
 
@@ -101,20 +119,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      builder: (_,child) {
-        return MaterialApp.router(
-          title: "Task Flow",
-          routerConfig: AppRouter.routerConfig,
-          theme: ThemeConfig.lightTheme,
-          darkTheme: ThemeConfig.darkTheme,
-          themeMode: ThemeMode.system,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-        );
-      }
-    );
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        builder: (_, child) {
+          return MaterialApp.router(
+            title: "Task Flow",
+            routerConfig: AppRouter.routerConfig,
+            theme: ThemeConfig.lightTheme,
+            darkTheme: ThemeConfig.darkTheme,
+            themeMode: ThemeMode.system,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+          );
+        });
   }
 }

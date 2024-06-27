@@ -6,5 +6,5 @@ abstract class TaskRepository{
   Future<Either<ApiError,TaskEntity>> addTask({required TaskEntity task});
   Future<Either<ApiError,List<TaskEntity>>> getTasksBySection({required String sectionId});
   Future<Either<ApiError,TaskEntity>> updateTask({required TaskEntity task});
-  Future<Either<ApiError,TaskEntity>> deleteTask({required String taskId});
+  Future<Either<ApiError,void>> deleteTask({required String taskId});
 }

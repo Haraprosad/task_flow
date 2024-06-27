@@ -5,13 +5,13 @@ import 'package:task_flow/core/usecases/usecase.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/domain/repositories/task_repository.dart';
 
-class DeleteTask implements UseCase<TaskEntity, DeleteTaskParams> {
+class DeleteTask implements UseCase<void, DeleteTaskParams> {
   final TaskRepository repository;
 
   DeleteTask(this.repository);
 
   @override
-  Future<Either<ApiError, TaskEntity>> call(DeleteTaskParams params) async {
+  Future<Either<ApiError, void>> call(DeleteTaskParams params) async {
     return repository.deleteTask(taskId: params.taskId);
   }
 }
