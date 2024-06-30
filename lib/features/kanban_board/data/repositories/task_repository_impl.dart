@@ -1,10 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:task_flow/core/network/api_error.dart';
 import 'package:task_flow/features/kanban_board/data/datasources/task_remote_datasource.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/domain/repositories/task_repository.dart';
 import 'package:task_flow/features/kanban_board/data/models/task_model.dart';
 
+
+@LazySingleton(as: TaskRepository)
 class TaskRepositoryImpl implements TaskRepository {
   final TaskRemoteDataSource remoteDataSource;
 

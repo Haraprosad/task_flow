@@ -1,8 +1,10 @@
 class KeyConstants{
-    //Flavors related constants
+  //Flavors related constants
   static const String envDevelopment = ".env.development";
   static const String envProduction = ".env.production";
   static const String envStaging = ".env.staging";
+
+  //Environment related keys
   static const String envKeyBaseUrl = "BASE_URL";
   static const String envKeyTodoSectionId = "TODO_SECTION_ID";
   static const String envKeyDoneSectionId = "DONE_SECTION_ID";

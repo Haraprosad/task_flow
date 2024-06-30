@@ -5,7 +5,7 @@ import 'package:task_flow/core/router/route_paths.dart';
 
 class AppRouter {
   static final GoRouter _routerConfig = GoRouter(
-    initialLocation: RoutePaths.home,
+    initialLocation: RoutePaths.kanbanBoard,
     routes: appRoutes,
     observers: [AppRouterObserver()],
   );

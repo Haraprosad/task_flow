@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
+import 'package:task_flow/features/kanban_board/presentation/widgets/draggable_task_card.dart';
+
+class KanbanSection extends StatelessWidget {
+  final String title;
+  final String sectionId;
+  final List<TaskEntity> tasks;
+  final Function(TaskEntity, double,bool) onDragAction;
+  final Function(TaskEntity) onEditTask;
+
+  const KanbanSection({
+    Key? key,
+    required this.title,
+    required this.sectionId,
+    required this.tasks,
+    required this.onDragAction,
+    required this.onEditTask,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              return DraggableTaskCard(
+                task: tasks[index],
+                onDragAction: (horizontalPosition,isRightDirection) => onDragAction(tasks[index], horizontalPosition,isRightDirection),
+                onEdit: () => onEditTask(tasks[index]),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

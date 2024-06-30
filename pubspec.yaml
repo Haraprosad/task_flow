@@ -34,6 +34,8 @@ dependencies:
   dartz: ^0.10.1
   flutter_dotenv: ^5.1.0
   equatable: ^2.0.5
+  http_mock_adapter: ^0.6.1
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +44,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   injectable_generator: ^2.6.1
   build_runner: ^2.4.11
+  talker_dio_logger: ^4.3.1
 
 flutter:
 
@@ -51,6 +54,9 @@ flutter:
   assets:
     - assets/images/
     - assets/translations/
+    - .env.production
+    - .env.development
+    - .env.staging
 
 
   fonts:

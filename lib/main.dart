@@ -14,13 +14,16 @@ import 'package:task_flow/core/router/app_router.dart';
 import 'package:task_flow/core/l10n/app_localizations.dart';
 import 'package:task_flow/core/theme/theme_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
 import 'package:task_flow/flavors/env_config.dart';
 import 'package:task_flow/flavors/environment.dart';
-//import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    configureDependencies();
 
     //Environment part
     await dotenv.load(fileName: KeyConstants.envProduction);
@@ -36,7 +39,6 @@ void main() async {
 
     // Initialize logger
     await EasyLocalization.ensureInitialized();
-    configureDependencies();
 
     // Set the global Bloc observer
     Bloc.observer = AppBlocObserver();
@@ -122,15 +124,18 @@ class MyApp extends StatelessWidget {
         designSize: const Size(375, 812),
         minTextAdapt: true,
         builder: (_, child) {
-          return MaterialApp.router(
-            title: "Task Flow",
-            routerConfig: AppRouter.routerConfig,
-            theme: ThemeConfig.lightTheme,
-            darkTheme: ThemeConfig.darkTheme,
-            themeMode: ThemeMode.system,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
+          return BlocProvider<KanbanBoardBloc>(
+            create: (_) => sl<KanbanBoardBloc>(),
+            child: MaterialApp.router(
+              title: "Task Flow",
+              routerConfig: AppRouter.routerConfig,
+              theme: ThemeConfig.lightTheme,
+              darkTheme: ThemeConfig.darkTheme,
+              themeMode: ThemeMode.system,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+            ),
           );
         });
   }

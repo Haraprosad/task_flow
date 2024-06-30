@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:injectable/injectable.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/core/network/api_error.dart';
-import 'package:task_flow/core/network/network_info.dart';
 import 'package:task_flow/core/network/response_code.dart';
 
+@lazySingleton
 class ApiErrorHandler {
 
   Future<ApiError> handleError(dynamic error) async {

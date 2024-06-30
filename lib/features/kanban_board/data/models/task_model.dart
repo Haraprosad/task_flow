@@ -13,9 +13,9 @@ class TaskModel extends TaskEntity {
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json['id'],
-      isCompleted: json['isCompleted'],
-      content: json['content'],
-      sectionId: json['sectionId'],
+      isCompleted: json['is_completed'] ?? false,
+      content: json['content'] ?? "",
+      sectionId: json['section_id'] ?? "",
       due: json['due'] != null ? DueModel.fromJson(json['due']) : null,
     );
   }
@@ -23,9 +23,9 @@ class TaskModel extends TaskEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'isCompleted': isCompleted,
+      'is_completed': isCompleted,
       'content': content,
-      'sectionId': sectionId,
+      'section_id': sectionId,
       'due': due != null ? (due as DueModel).toJson() : null,
     };
   }
