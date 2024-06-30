@@ -6,14 +6,18 @@ class TaskEntity extends Equatable {
   final bool? isCompleted;
   final String content;
   final Due? due;
-  final String? sectionId;
+  final String sectionId;
+  final List<String> comments;
+  final int duration;
 
   const TaskEntity({
     required this.id,
     this.isCompleted,
     required this.content,
     this.due,
-    this.sectionId,
+    required this.sectionId,
+    required this.comments,
+    required this.duration,
   });
 
   TaskEntity copyWith({
@@ -22,6 +26,8 @@ class TaskEntity extends Equatable {
     String? content,
     Due? due,
     String? sectionId,
+    List<String>? comments,
+    int? duration,
   }) {
     return TaskEntity(
       id: id ?? this.id,
@@ -29,6 +35,8 @@ class TaskEntity extends Equatable {
       content: content ?? this.content,
       due: due ?? this.due,
       sectionId: sectionId ?? this.sectionId,
+      comments: comments ?? this.comments,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -39,5 +47,7 @@ class TaskEntity extends Equatable {
         content,
         due,
         sectionId,
+        comments,
+        duration,
       ];
 }

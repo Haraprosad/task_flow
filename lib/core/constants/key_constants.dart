@@ -10,4 +10,9 @@ class KeyConstants{
   static const String envKeyDoneSectionId = "DONE_SECTION_ID";
   static const String envKeyInProgressSectionId = "IN_PROGRESS_SECTION_ID";
   static const String envKeyToken = "TOKEN";
+
+  //Database related keys
+  static const String todoSectionId = "todoSectionId";
+  static const String doneSectionId = "doneSectionId";
+  static const String inProgressSectionId = "inProgressSectionId";
 }

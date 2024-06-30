@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_flow/core/constants/key_constants.dart';
+import 'package:task_flow/core/extensions/color_scheme_extension.dart';
+import 'package:task_flow/core/extensions/text_style_extensions.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
+import 'package:task_flow/features/kanban_board/presentation/widgets/bulleted_text_field.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/kanban_board.dart';
-import 'package:task_flow/flavors/env_config.dart';
 import 'package:uuid/uuid.dart';
 
 class KanbanBoardScreen extends StatelessWidget {
@@ -11,57 +14,81 @@ class KanbanBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access the KanbanBoardBloc
     final kanbanBoardBloc = context.read<KanbanBoardBloc>();
-    final EnvConfig envConfig = EnvConfig.instance;
-    final String todoSectionId = envConfig.todoSectionId;
-
-    // Load tasks when the screen is built
     kanbanBoardBloc.add(const LoadTasks(""));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kanban Board'),
-      ),
       body: KanbanBoard(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTaskDialog(context: context,sectionId: todoSectionId),
+        onPressed: () => _showAddTaskDialog(
+            context: context, sectionId: KeyConstants.todoSectionId),
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddTaskDialog({required BuildContext context,required String sectionId}) {
+  void _showAddTaskDialog(
+      {required BuildContext context, required String sectionId}) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         String taskTitle = '';
+        List<String> comments = [];
         return AlertDialog(
-          title: const Text('Add New Task'),
-          content: TextField(
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: 'Enter task title',
+          title: Text('Add New Task', style: context.titleLarge),
+          content: SingleChildScrollView(
+            child: Container(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Task Title', style: context.titleMedium),
+                  const SizedBox(height: 8),
+                  TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'Enter task title',
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 2.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      taskTitle = value;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Comments', style: context.titleMedium),
+                  const SizedBox(height: 8),
+                  BulletTextField(
+                    onChanged: (value) {
+                      comments = value;
+                    },
+                  ),
+                ],
+              ),
             ),
-            onChanged: (value) {
-              taskTitle = value;
-            },
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child:
+                  Text('Cancel', style: TextStyle(color: context.errorColor)),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
             ),
-            TextButton(
-              child: const Text('Add'),
+            ElevatedButton(
+              child: Text('Add'),
               onPressed: () {
                 if (taskTitle.isNotEmpty) {
                   final newTask = TaskEntity(
                     id: const Uuid().v4(),
                     content: taskTitle,
-                    sectionId:sectionId,
+                    sectionId: sectionId,
+                    comments: comments,
+                    duration: 0,
                   );
                   context.read<KanbanBoardBloc>().add(AddNewTask(newTask));
                   Navigator.of(dialogContext).pop();
@@ -74,3 +101,4 @@ class KanbanBoardScreen extends StatelessWidget {
     );
   }
 }
+

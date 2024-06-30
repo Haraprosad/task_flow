@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
+import 'package:task_flow/core/constants/asset_constants.dart';
+import 'package:task_flow/core/constants/key_constants.dart';
+import 'package:task_flow/core/extensions/color_scheme_extension.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/kanban_section.dart';
@@ -54,15 +57,44 @@ class _KanbanBoardState extends State<KanbanBoard>
   }
 
   Widget _buildKanbanBoard(BuildContext context, List<TaskEntity> tasks) {
-    final EnvConfig envConfig = EnvConfig.instance;
     final sections = [
-      SectionConfig('To Do', envConfig.todoSectionId),
-      SectionConfig('In Progress', envConfig.inProgressSectionId),
-      SectionConfig('Done', envConfig.doneSectionId),
+      SectionConfig('To Do', KeyConstants.todoSectionId),
+      SectionConfig('In Progress', KeyConstants.inProgressSectionId),
+      SectionConfig('Done', KeyConstants.doneSectionId),
     ];
 
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: context.primaryColor,
+              ),
+              child: Column(
+                children: [
+                  Image.asset(AssetConstants.logo, height: 100),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
+        title: const Text('Kanban Board'),
         bottom: TabBar(
           controller: _tabController,
           tabs: sections.map((section) => Tab(text: section.title)).toList(),
@@ -80,10 +112,12 @@ class _KanbanBoardState extends State<KanbanBoard>
                     .where((task) => task.sectionId == section.id)
                     .toList(),
                 onDragAction: (task, horizontalPosition, isRightDirection) =>
-                    _handleDragAction(context: context,task: task, 
-                    horizontalPosition :horizontalPosition,
-                        currentSectionId:section.id,
-                        isRightDirection: isRightDirection ),
+                    _handleDragAction(
+                        context: context,
+                        task: task,
+                        horizontalPosition: horizontalPosition,
+                        currentSectionId: section.id,
+                        isRightDirection: isRightDirection),
                 onEditTask: (task) => _showEditTaskDialog(context, task),
               );
             },
@@ -96,7 +130,7 @@ class _KanbanBoardState extends State<KanbanBoard>
                     MoveTask(
                       taskId: data.id,
                       newSectionId: section.id,
-                      isCompleted: section.id == envConfig.doneSectionId,
+                      isCompleted: section.id == KeyConstants.doneSectionId,
                     ),
                   );
             },
@@ -106,23 +140,22 @@ class _KanbanBoardState extends State<KanbanBoard>
     );
   }
 
-  void _handleDragAction(
-      {required BuildContext context,
-      required TaskEntity task,
-      required double horizontalPosition,
-      required String currentSectionId,
-      required bool isRightDirection,
-    }) {
+  void _handleDragAction({
+    required BuildContext context,
+    required TaskEntity task,
+    required double horizontalPosition,
+    required String currentSectionId,
+    required bool isRightDirection,
+  }) {
     logger.i("Drag Action has been called.");
     final halfScreenWidth = MediaQuery.of(context).size.width / 2;
     final dragX = horizontalPosition.abs();
 
     if (dragX > halfScreenWidth) {
-      final EnvConfig envConfig = EnvConfig.instance;
       final sections = [
-        envConfig.todoSectionId,
-        envConfig.inProgressSectionId,
-        envConfig.doneSectionId,
+        KeyConstants.todoSectionId,
+        KeyConstants.inProgressSectionId,
+        KeyConstants.doneSectionId,
       ];
 
       int nextIndex;
@@ -135,16 +168,15 @@ class _KanbanBoardState extends State<KanbanBoard>
       }
 
       final newSectionId = sections[nextIndex];
-      // if (newSectionId != currentSectionId) {
-      //   context.read<KanbanBoardBloc>().add(
-      //         MoveTask(
-      //           taskId: task.id,
-      //           newSectionId: newSectionId,
-      //           isCompleted: newSectionId == envConfig.doneSectionId,
-      //         ),
-      //       );
-      // }
-
+      if (newSectionId != currentSectionId) {
+        context.read<KanbanBoardBloc>().add(
+              MoveTask(
+                taskId: task.id,
+                newSectionId: newSectionId,
+                isCompleted: newSectionId == KeyConstants.doneSectionId,
+              ),
+            );
+      }
       _tabController.animateTo(nextIndex);
     }
   }
@@ -155,7 +187,7 @@ class _KanbanBoardState extends State<KanbanBoard>
       builder: (BuildContext context) => TaskDialog(
         task: task,
         onSave: (updatedTask) {
-          context.read<KanbanBoardBloc>().add(UpdateExistingTask(task));
+          context.read<KanbanBoardBloc>().add(UpdateExistingTask(updatedTask));
           Navigator.of(context).pop();
         },
       ),

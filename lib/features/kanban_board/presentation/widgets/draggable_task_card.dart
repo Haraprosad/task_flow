@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
+import 'package:task_flow/core/extensions/text_style_extensions.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 
 class DraggableTaskCard extends StatefulWidget {
@@ -89,13 +90,71 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        title: Text(task.content),
-        subtitle: task.due != null ? Text('Due: ${task.due!.date}') : null,
-        trailing: IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: onEdit,
+      margin: EdgeInsets.all(8.0),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    task.content,
+                    style: context.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                  onPressed: onEdit,
+                  tooltip: 'Edit Task',
+                ),
+              ],
+            ),
+            if (task.due != null)
+              Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: Text(
+                  'Due: ${task.due!.date}',
+                  style: context.bodySmall
+                      ?.copyWith(color: Theme.of(context).hintColor),
+                ),
+              ),
+            SizedBox(height: 8.0),
+            if (task.comments.isNotEmpty) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.comment,
+                      size: 16, color: Theme.of(context).primaryColor),
+                  SizedBox(width: 8),
+                  Text(
+                    'Comments:',
+                    style: context.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4.0),
+              ...task.comments.map((comment) => Padding(
+                    padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.circle,
+                            size: 16, color: Theme.of(context).primaryColor),
+                        SizedBox(width: 8),
+                        Expanded(
+                            child: Text(comment, style: context.bodyMedium)),
+                      ],
+                    ),
+                  )),
+            ],
+          ],
         ),
       ),
     );
