@@ -10,12 +10,14 @@ class DraggableTaskCard extends StatefulWidget {
   final TaskEntity task;
   final VoidCallback onEdit;
   final Function(double, bool) onDragAction;
+  final Function(TaskEntity) onUpdateTask;
 
   DraggableTaskCard({
     Key? key,
     required this.task,
     required this.onEdit,
     required this.onDragAction,
+    required this.onUpdateTask,
   }) : super(key: key);
 
   @override
@@ -76,9 +78,9 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
       ),
       childWhenDragging: Opacity(
         opacity: 0.5,
-        child: TaskCard(task: widget.task, onEdit: widget.onEdit),
+        child: TaskCard(task: widget.task, onEdit: widget.onEdit,onUpdateTask: widget.onUpdateTask,),
       ),
-      child: TaskCard(task: widget.task, onEdit: widget.onEdit),
+      child: TaskCard(task: widget.task, onEdit: widget.onEdit,onUpdateTask: widget.onUpdateTask,),
     );
   }
 }
@@ -86,9 +88,14 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
 class TaskCard extends StatefulWidget {
   final TaskEntity task;
   final VoidCallback onEdit;
+  final Function(TaskEntity) onUpdateTask;
 
-  const TaskCard({Key? key, required this.task, required this.onEdit})
-      : super(key: key);
+  const TaskCard({
+    Key? key,
+    required this.task,
+    required this.onEdit,
+    required this.onUpdateTask,
+  }) : super(key: key);
 
   @override
   _TaskCardState createState() => _TaskCardState();
@@ -96,26 +103,30 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   Timer? _timer;
-  int _seconds = 0;
+  late int _seconds;
   bool _isRunning = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.task.sectionId == KeyConstants.inProgressSectionId) {
-      _startTimer();
-    }
+    _seconds = widget.task.duration;
   }
 
   @override
   void didUpdateWidget(TaskCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.task.sectionId != oldWidget.task.sectionId) {
-      if (widget.task.sectionId == KeyConstants.inProgressSectionId) {
-        _startTimer();
-      } else {
+      if (widget.task.sectionId != KeyConstants.inProgressSectionId) {
         _stopTimer();
       }
+    }
+  }
+
+  void _toggleTimer() {
+    if (_isRunning) {
+      _stopTimer();
+    } else {
+      _startTimer();
     }
   }
 
@@ -127,6 +138,7 @@ class _TaskCardState extends State<TaskCard> {
       setState(() {
         _seconds++;
       });
+      widget.onUpdateTask(widget.task.copyWith(duration: _seconds));
     });
   }
 
@@ -135,6 +147,7 @@ class _TaskCardState extends State<TaskCard> {
     setState(() {
       _isRunning = false;
     });
+    widget.onUpdateTask(widget.task.copyWith(duration: _seconds));
   }
 
   String _formatTime(int seconds) {
@@ -142,6 +155,19 @@ class _TaskCardState extends State<TaskCard> {
     int minutes = (seconds % 3600) ~/ 60;
     int remainingSeconds = seconds % 60;
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  Color _getCardColor() {
+    switch (widget.task.sectionId) {
+      case KeyConstants.todoSectionId:
+        return Colors.blue[50]!;
+      case KeyConstants.inProgressSectionId:
+        return Colors.amber[50]!;
+      case KeyConstants.doneSectionId:
+        return Colors.green[50]!;
+      default:
+        return Colors.white;
+    }
   }
 
   @override
@@ -155,6 +181,7 @@ class _TaskCardState extends State<TaskCard> {
     return Card(
       margin: EdgeInsets.all(8.0),
       elevation: 2,
+      color: _getCardColor(),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(12.0),
@@ -167,8 +194,7 @@ class _TaskCardState extends State<TaskCard> {
                 Expanded(
                   child: Text(
                     widget.task.content,
-                    style: context.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
@@ -183,57 +209,45 @@ class _TaskCardState extends State<TaskCard> {
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
                   'Due: ${widget.task.due}',
-                  style: context.bodySmall
-                      ?.copyWith(color: Theme.of(context).hintColor),
+                  style: context.bodySmall?.copyWith(color: Theme.of(context).hintColor),
                 ),
               ),
-            if (widget.task.sectionId == KeyConstants.inProgressSectionId)
-              Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Time: ${_formatTime(_seconds)}',
-                      style: context.bodyMedium,
-                    ),
-                    SizedBox(width: 8),
+            Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Row(
+                children: [
+                  Text(
+                    'Time: ${_formatTime(_seconds)}',
+                    style: context.bodyMedium,
+                  ),
+                  SizedBox(width: 8),
+                  if (widget.task.sectionId == KeyConstants.inProgressSectionId)
                     IconButton(
                       icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
-                      onPressed: _isRunning ? _stopTimer : _startTimer,
+                      onPressed: _toggleTimer,
                       tooltip: _isRunning ? 'Pause Timer' : 'Start Timer',
                     ),
-                  ],
-                ),
+                ],
               ),
+            ),
             SizedBox(height: 8.0),
             if (widget.task.comments.isNotEmpty) ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.comment,
-                      size: 16, color: Theme.of(context).primaryColor),
-                  SizedBox(width: 8),
-                  Text(
-                    'Comments:',
-                    style: context.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ],
+              Text(
+                'Comments:',
+                style: context.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 4.0),
               ...widget.task.comments.map((comment) => Padding(
-                    padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.circle,
-                            size: 16, color: Theme.of(context).primaryColor),
-                        SizedBox(width: 8),
-                        Expanded(
-                            child: Text(comment, style: context.bodyMedium)),
-                      ],
-                    ),
-                  )),
+                padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.circle, size: 8, color: Theme.of(context).primaryColor),
+                    SizedBox(width: 8),
+                    Expanded(child: Text(comment, style: context.bodySmall)),
+                  ],
+                ),
+              )),
             ],
           ],
         ),

@@ -108,6 +108,9 @@ class _KanbanBoardState extends State<KanbanBoard>
               return KanbanSection(
                 title: section.title,
                 sectionId: section.id,
+                onUpdateTask: ((updatedTask){
+                  context.read<KanbanBoardBloc>().add(UpdateExistingTask(updatedTask));
+                }),
                 tasks: tasks
                     .where((task) => task.sectionId == section.id)
                     .toList(),
