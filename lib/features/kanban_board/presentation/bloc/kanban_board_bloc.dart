@@ -68,10 +68,12 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
   Future<void> _onMoveTask(MoveTask event, Emitter<KanbanBoardState> emit) async {
     final currentState = state;
     if (currentState is KanbanBoardLoaded) {
-      final taskToMove = currentState.tasks.firstWhere((task) => task.id == event.taskId);
+      final taskToMove = currentState.tasks.firstWhere((task) => task.id == event.newTaskEntity.id);
       final updatedTask = taskToMove.copyWith(
-        sectionId: event.newSectionId,
-        isCompleted: event.isCompleted,
+        sectionId: event.newTaskEntity.sectionId,
+        // isCompleted: event.newTaskEntity.isCompleted,
+        // duration: event.newTaskEntity.duration,
+        // completedAt: event.newTaskEntity.completedAt,
       );
       add(UpdateExistingTask(updatedTask));
     }

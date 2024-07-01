@@ -44,12 +44,12 @@ class DeleteExistingTask extends KanbanBoardEvent {
 }
 
 class MoveTask extends KanbanBoardEvent {
-  final String taskId;
-  final String newSectionId;
-  final bool isCompleted;
+  final TaskEntity newTaskEntity;
 
-  const MoveTask({required this.taskId, required this.newSectionId,required this.isCompleted});
+  const MoveTask({
+    required this.newTaskEntity
+  });
 
   @override
-  List<Object> get props => [taskId, newSectionId,isCompleted];
+  List<Object> get props => [newTaskEntity];
 }

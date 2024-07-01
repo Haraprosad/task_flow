@@ -121,19 +121,6 @@ class _KanbanBoardState extends State<KanbanBoard>
                 onEditTask: (task) => _showEditTaskDialog(context, task),
               );
             },
-            onWillAccept: (data) {
-              return true;
-              //return data != null && data.sectionId != section.id;
-            },
-            onAccept: (data) {
-              context.read<KanbanBoardBloc>().add(
-                    MoveTask(
-                      taskId: data.id,
-                      newSectionId: section.id,
-                      isCompleted: section.id == KeyConstants.doneSectionId,
-                    ),
-                  );
-            },
           );
         }).toList(),
       ),
@@ -171,9 +158,7 @@ class _KanbanBoardState extends State<KanbanBoard>
       if (newSectionId != currentSectionId) {
         context.read<KanbanBoardBloc>().add(
               MoveTask(
-                taskId: task.id,
-                newSectionId: newSectionId,
-                isCompleted: newSectionId == KeyConstants.doneSectionId,
+                newTaskEntity: task.copyWith(sectionId: newSectionId),
               ),
             );
       }

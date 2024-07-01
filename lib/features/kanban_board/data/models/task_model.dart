@@ -25,6 +25,9 @@ class TaskModel extends TaskEntity {
   
   @HiveField(6)
   final int duration;
+  
+  @HiveField(7)
+  final DateTime? completedAt;
 
   const TaskModel({
     required this.id,
@@ -34,6 +37,7 @@ class TaskModel extends TaskEntity {
     required this.sectionId,
     required this.comments,
     required this.duration,
+    this.completedAt,
   }) : super(
           id: id,
           isCompleted: isCompleted,
@@ -42,6 +46,7 @@ class TaskModel extends TaskEntity {
           sectionId: sectionId,
           comments: comments,
           duration: duration,
+          completedAt: completedAt,
         );
 
   factory TaskModel.fromJson(Map<String, dynamic> json, {
@@ -49,6 +54,7 @@ class TaskModel extends TaskEntity {
     List<String>? comments,
     int? duration,
     DateTime? dueDate,
+    DateTime? completedAt,
   }) {
     return TaskModel(
       id: json['id'],
@@ -58,6 +64,7 @@ class TaskModel extends TaskEntity {
       sectionId: sectionId ?? 'todo',
       comments: comments ?? [],
       duration: duration ?? 0,
+      completedAt: completedAt,
     );
   }
 
@@ -66,10 +73,11 @@ class TaskModel extends TaskEntity {
       'id': id,
       'is_completed': isCompleted,
       'content': content,
-      'due': due,
+      'due': due?.toIso8601String(),
       'section_id': sectionId,
       'comments': comments,
       'duration': duration,
+      'completed_at': completedAt?.toIso8601String(),
     };
   }
 
@@ -78,7 +86,7 @@ class TaskModel extends TaskEntity {
       'id': id,
       'is_completed': isCompleted,
       'content': content,
+      'completed_at': completedAt?.toIso8601String(),
     };
   }
 }
-

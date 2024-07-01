@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
+import 'package:task_flow/core/constants/key_constants.dart';
 import 'package:task_flow/core/extensions/text_style_extensions.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 
@@ -80,12 +83,72 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
   }
 }
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final TaskEntity task;
   final VoidCallback onEdit;
 
   const TaskCard({Key? key, required this.task, required this.onEdit})
       : super(key: key);
+
+  @override
+  _TaskCardState createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  Timer? _timer;
+  int _seconds = 0;
+  bool _isRunning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.task.sectionId == KeyConstants.inProgressSectionId) {
+      _startTimer();
+    }
+  }
+
+  @override
+  void didUpdateWidget(TaskCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.task.sectionId != oldWidget.task.sectionId) {
+      if (widget.task.sectionId == KeyConstants.inProgressSectionId) {
+        _startTimer();
+      } else {
+        _stopTimer();
+      }
+    }
+  }
+
+  void _startTimer() {
+    setState(() {
+      _isRunning = true;
+    });
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+      });
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    setState(() {
+      _isRunning = false;
+    });
+  }
+
+  String _formatTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,29 +166,47 @@ class TaskCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    task.content,
+                    widget.task.content,
                     style: context.titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                  onPressed: onEdit,
+                  onPressed: widget.onEdit,
                   tooltip: 'Edit Task',
                 ),
               ],
             ),
-            if (task.due != null)
+            if (widget.task.due != null)
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
-                  'Due: ${task.due}',
+                  'Due: ${widget.task.due}',
                   style: context.bodySmall
                       ?.copyWith(color: Theme.of(context).hintColor),
                 ),
               ),
+            if (widget.task.sectionId == KeyConstants.inProgressSectionId)
+              Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Time: ${_formatTime(_seconds)}',
+                      style: context.bodyMedium,
+                    ),
+                    SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+                      onPressed: _isRunning ? _stopTimer : _startTimer,
+                      tooltip: _isRunning ? 'Pause Timer' : 'Start Timer',
+                    ),
+                  ],
+                ),
+              ),
             SizedBox(height: 8.0),
-            if (task.comments.isNotEmpty) ...[
+            if (widget.task.comments.isNotEmpty) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -140,7 +221,7 @@ class TaskCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 4.0),
-              ...task.comments.map((comment) => Padding(
+              ...widget.task.comments.map((comment) => Padding(
                     padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

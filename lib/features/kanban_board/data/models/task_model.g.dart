@@ -24,13 +24,14 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       sectionId: fields[4] as String,
       comments: (fields[5] as List).cast<String>(),
       duration: fields[6] as int,
+      completedAt: fields[7] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(5)
       ..write(obj.comments)
       ..writeByte(6)
-      ..write(obj.duration);
+      ..write(obj.duration)
+      ..writeByte(7)
+      ..write(obj.completedAt);
   }
 
   @override

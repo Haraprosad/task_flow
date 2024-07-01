@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-
 class TaskEntity extends Equatable {
   final String id;
   final bool? isCompleted;
   final String content;
   final DateTime? due;
+  final DateTime? completedAt;
   final String sectionId;
   final List<String> comments;
   final int duration;
@@ -15,6 +15,7 @@ class TaskEntity extends Equatable {
     this.isCompleted,
     required this.content,
     this.due,
+    this.completedAt,
     required this.sectionId,
     required this.comments,
     required this.duration,
@@ -25,6 +26,7 @@ class TaskEntity extends Equatable {
     bool? isCompleted,
     String? content,
     DateTime? due,
+    DateTime? completedAt,
     String? sectionId,
     List<String>? comments,
     int? duration,
@@ -34,6 +36,7 @@ class TaskEntity extends Equatable {
       isCompleted: isCompleted ?? this.isCompleted,
       content: content ?? this.content,
       due: due ?? this.due,
+      completedAt: completedAt ?? this.completedAt,
       sectionId: sectionId ?? this.sectionId,
       comments: comments ?? this.comments,
       duration: duration ?? this.duration,
@@ -46,6 +49,7 @@ class TaskEntity extends Equatable {
         isCompleted,
         content,
         due,
+        completedAt,
         sectionId,
         comments,
         duration,
