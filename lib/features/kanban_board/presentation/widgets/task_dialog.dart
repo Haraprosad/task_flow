@@ -5,6 +5,7 @@ import 'package:task_flow/core/extensions/text_style_extensions.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/bulleted_text_field.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 class TaskDialog extends StatefulWidget {
   final TaskEntity? task;
@@ -20,12 +21,14 @@ class TaskDialog extends StatefulWidget {
 class _TaskDialogState extends State<TaskDialog> {
   late TextEditingController _titleController;
   late List<String> _comments;
+  DateTime? _dueDateTime;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.task?.content);
     _comments = widget.task?.comments ?? [];
+    _dueDateTime = widget.task?.due;
   }
 
   @override
@@ -55,6 +58,29 @@ class _TaskDialogState extends State<TaskDialog> {
                 ),
               ),
               const SizedBox(height: 16),
+              Text('Due Date and Time', style: context.titleMedium),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () => _selectDateTime(context),
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        _dueDateTime != null
+                            ? DateFormat('MMM dd, yyyy HH:mm').format(_dueDateTime!)
+                            : 'Select due date and time',
+                      ),
+                      Icon(Icons.calendar_today),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               Text('Comments', style: context.titleMedium),
               const SizedBox(height: 8),
               BulletTextField(
@@ -79,21 +105,48 @@ class _TaskDialogState extends State<TaskDialog> {
               final updatedTask = widget.task?.copyWith(
                     content: _titleController.text,
                     comments: _comments,
+                    due: _dueDateTime,
                   ) ??
                   TaskEntity(
-                    id: widget.task?.id ??const Uuid().v4(),
+                    id: widget.task?.id ?? const Uuid().v4(),
                     content: _titleController.text,
                     sectionId: widget.task?.sectionId ?? KeyConstants.todoSectionId,
                     comments: _comments,
                     duration: 0,
+                    due: _dueDateTime,
                   );
               widget.onSave(updatedTask);
-            
             }
           },
         ),
       ],
     );
+  }
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _dueDateTime ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_dueDateTime ?? DateTime.now()),
+      );
+      if (pickedTime != null) {
+        setState(() {
+          _dueDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+        });
+      }
+    }
   }
 
   @override

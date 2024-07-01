@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class BulletTextField extends StatefulWidget {
@@ -62,32 +64,33 @@ class _BulletTextFieldState extends State<BulletTextField> {
       ),
       maxLines: null,
       onChanged: (value) {
-        final cursorPosition = _controller.selection.base.offset;
+        final cursorPosition = _controller.selection.baseOffset;
         final lines = value.split('\n');
         final newLines = <String>[];
-        var cursorOffset = 1;
+        var newCursorPosition = cursorPosition;
 
         for (int i = 0; i < lines.length; i++) {
           final line = lines[i].trimLeft();
           if (line.isEmpty && i < lines.length - 1) {
             newLines.add('• ');
-            if (cursorPosition > newLines.join('\n').length) {
-              cursorOffset += 2;
+            if (cursorPosition > newLines.join('\n').length - 2) {
+              newCursorPosition += 2;
             }
           } else if (line.startsWith('•')) {
-            newLines.add(lines[i]);
+            newLines.add(line);
           } else if (line.isNotEmpty) {
-            newLines.add('• $line');
-            if (cursorPosition > newLines.join('\n').length) {
-              cursorOffset += 2;
+            final newLine = '• $line';
+            newLines.add(newLine);
+            if (cursorPosition > newLines.join('\n').length - newLine.length) {
+              newCursorPosition += 2;
             }
           } else {
-            newLines.add(lines[i]);
+            newLines.add(line);
           }
         }
 
         final newValue = newLines.join('\n');
-        final newCursorPosition = cursorPosition + cursorOffset + 1;
+        newCursorPosition = newCursorPosition.clamp(0, newValue.length);
 
         _controller.value = TextEditingValue(
           text: newValue,

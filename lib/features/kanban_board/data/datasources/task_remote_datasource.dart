@@ -5,7 +5,6 @@ import 'package:task_flow/core/network/network_info.dart';
 import 'package:task_flow/features/kanban_board/data/models/task_model.dart';
 import 'package:task_flow/features/kanban_board/data/datasources/task_local_datasource.dart';
 
-
 abstract class TaskRemoteDataSource {
   Future<TaskModel> addTask(TaskModel task);
   Future<List<TaskModel>> getTasksBySection(String sectionId);
@@ -43,6 +42,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
         sectionId: localTask?.sectionId,
         comments: localTask?.comments,
         duration: localTask?.duration,
+        dueDate: localTask?.due ?? remoteTask.due,
       );
     }).toList();
   }
@@ -59,7 +59,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
           final remoteTask = TaskModel.fromJson(data,
               sectionId: task.sectionId,
               comments: task.comments,
-              duration: task.duration);
+              duration: task.duration,
+              dueDate: task.due);
           await _localDataSource.addTask(remoteTask);
           return remoteTask;
         },
@@ -107,7 +108,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
           final remoteTask = TaskModel.fromJson(data,
               sectionId: task.sectionId,
               comments: task.comments,
-              duration: task.duration);
+              duration: task.duration,
+              dueDate: task.due);
           await _localDataSource.updateTask(remoteTask);
           return remoteTask;
         },

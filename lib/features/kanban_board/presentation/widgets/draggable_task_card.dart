@@ -119,7 +119,7 @@ class TaskCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
-                  'Due: ${task.due!.date}',
+                  'Due: ${task.due}',
                   style: context.bodySmall
                       ?.copyWith(color: Theme.of(context).hintColor),
                 ),

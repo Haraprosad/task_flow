@@ -20,7 +20,6 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
       final dir = await getApplicationDocumentsDirectory();
       Hive.init(dir.path);
       Hive.registerAdapter(TaskModelAdapter());
-      Hive.registerAdapter(DueModelAdapter());
       await Hive.openBox<TaskModel>(taskBoxName);
     }
     return Hive.box<TaskModel>(taskBoxName);
