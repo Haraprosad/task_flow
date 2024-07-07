@@ -90,4 +90,6 @@ class LocalizationConstants {
   static const String time = "time";
   static const String pauseTimer = "pause_timer";
   static const String startTimer = "start_timer";
+
+  static const String thereIsNoTask = "there_is_no_task";
 }

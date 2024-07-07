@@ -39,7 +39,6 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
     _debounceTimer = Timer(_debounceTime, callback);
   }
 
-
   Future<void> _onLoadTasks(
       LoadTasks event, Emitter<KanbanBoardState> emit) async {
     emit(KanbanBoardLoading());
@@ -53,6 +52,7 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
   Future<void> _onAddNewTask(
       AddNewTask event, Emitter<KanbanBoardState> emit) async {
     final currentState = state;
+    emit(KanbanBoardLoading());
     if (currentState is KanbanBoardLoaded) {
       final result = await addTask(AddTaskParams(task: event.task));
       result.fold(
@@ -69,6 +69,7 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
   Future<void> _onUpdateExistingTask(
       UpdateExistingTask event, Emitter<KanbanBoardState> emit) async {
     final currentState = state;
+    emit(KanbanBoardLoading());
     if (currentState is KanbanBoardLoaded) {
       logger.d("During onUpdateExistingTask call Task Started: ${event.task}");
       final result = await updateTask(UpdateTaskParams(task: event.task));
@@ -85,7 +86,8 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
     }
   }
 
-   Future<void> _onMoveTask(MoveTask event, Emitter<KanbanBoardState> emit) async {
+  Future<void> _onMoveTask(
+      MoveTask event, Emitter<KanbanBoardState> emit) async {
     _debounce(() {
       final currentState = state;
       if (currentState is KanbanBoardLoaded) {
@@ -104,7 +106,7 @@ class KanbanBoardBloc extends Bloc<KanbanBoardEvent, KanbanBoardState> {
     });
   }
 
-   @override
+  @override
   Future<void> close() {
     _debounceTimer?.cancel();
     return super.close();

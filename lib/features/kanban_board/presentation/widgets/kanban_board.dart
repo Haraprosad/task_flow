@@ -63,37 +63,37 @@ class _KanbanBoardState extends State<KanbanBoard>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<KanbanBoardBloc, KanbanBoardState>(
-      builder: (context, state) {
-        if (state is KanbanBoardLoaded) {
-          return _buildKanbanBoard(context, state.tasks);
-        } else if (state is KanbanBoardError) {
-          return ErrorShowingWidget(
-            errorMessage: state.message,
-            onRetry: () {
-              context.read<KanbanBoardBloc>().add(const LoadTasks(""));
-            },
-          );
-        }
-        return Container();
-      },
-      listener: (BuildContext context, KanbanBoardState state) {
-        _handleStateChange(state);
-      },
+    return Scaffold(
+      drawer: AppDrawer(),
+      appBar: _buildAppBar(),
+      body: BlocConsumer<KanbanBoardBloc, KanbanBoardState>(
+        builder: (context, state) {
+          if (state is KanbanBoardLoaded) {
+            return _buildKanbanBoard(context, state.tasks);
+          } else if (state is KanbanBoardError) {
+            return ErrorShowingWidget(
+              errorMessage: state.message,
+              onRetry: () {
+                context.read<KanbanBoardBloc>().add(const LoadTasks(""));
+              },
+            );
+          }
+          return Container();
+        },
+        listener: (BuildContext context, KanbanBoardState state) {
+          _handleStateChange(state);
+        },
+      ),
     );
   }
 
   Widget _buildKanbanBoard(BuildContext context, List<TaskEntity> tasks) {
-    return Scaffold(
-      drawer: AppDrawer(),
-      appBar: _buildAppBar(),
-      body: TabBarView(
+    return TabBarView(
         controller: _tabController,
         children: sections
             .map((section) => _buildSection(context, section, tasks))
             .toList(),
-      ),
-    );
+      );
   }
 
   AppBar _buildAppBar() {
@@ -113,13 +113,14 @@ class _KanbanBoardState extends State<KanbanBoard>
           sectionId: section.id,
           onUpdateTask: _updateTask,
           tasks: tasks.where((task) => task.sectionId == section.id).toList(),
-          onDragAction: (task, horizontalPosition, isRightDirection) =>
+          onDragAction: (task, horizontalPosition, isRightDirection, durationTime) =>
               _handleDragAction(
             context: context,
             task: task,
             horizontalPosition: horizontalPosition,
             currentSectionId: section.id,
             isRightDirection: isRightDirection,
+            durationTime: durationTime,
           ),
           onEditTask: (task) => _showEditTaskDialog(context, task),
         );
@@ -136,6 +137,7 @@ class _KanbanBoardState extends State<KanbanBoard>
     required double horizontalPosition,
     required String currentSectionId,
     required bool isRightDirection,
+    required int durationTime,
   }) {
     final halfScreenWidth = MediaQuery.of(context).size.width / 2;
     final dragX = horizontalPosition.abs();
@@ -143,7 +145,7 @@ class _KanbanBoardState extends State<KanbanBoard>
     if (dragX > halfScreenWidth) {
       int nextIndex = _getNextIndex(isRightDirection);
       if (nextIndex != _currentIndex) {
-        _moveTask(task, sections[nextIndex].id);
+        _moveTask(task, sections[nextIndex].id, durationTime);
         _tabController.animateTo(nextIndex);
       }
     }
@@ -158,14 +160,15 @@ class _KanbanBoardState extends State<KanbanBoard>
     return _currentIndex;
   }
 
-  void _moveTask(TaskEntity task, String newSectionId) {
+  void _moveTask(TaskEntity task, String newSectionId, int durationTime) {
     final newTask = newSectionId == KeyConstants.doneSectionId
         ? task.copyWith(
             sectionId: newSectionId,
             isCompleted: true,
+            duration: durationTime,
             completedAt: DateTime.now(),
           )
-        : task.copyWith(sectionId: newSectionId);
+        : task.copyWith(sectionId: newSectionId,duration: durationTime);
 
     context.read<KanbanBoardBloc>().add(MoveTask(newTaskEntity: newTask));
   }

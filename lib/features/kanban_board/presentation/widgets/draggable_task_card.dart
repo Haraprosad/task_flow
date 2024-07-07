@@ -14,7 +14,7 @@ import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart
 class DraggableTaskCard extends StatefulWidget {
   final TaskEntity task;
   final VoidCallback onEdit;
-  final Function(double, bool) onDragAction;
+  final Function(double, bool, int) onDragAction;
   final Function(TaskEntity) onUpdateTask;
 
   DraggableTaskCard({
@@ -32,6 +32,7 @@ class DraggableTaskCard extends StatefulWidget {
 class _DraggableTaskCardState extends State<DraggableTaskCard> {
   bool isTheresholdExceeded = true;
   double horizontalPosition = 0.0;
+  int durationTime = 0;
 
   @override
   void initState() {
@@ -48,12 +49,12 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
       axis: Axis.horizontal,
       onDragUpdate: (details) {
         DragUpdateDetails detailsx = details;
-        
+
         horizontalPosition = detailsx.localPosition.dx;
-      
+
         if (!isTheresholdExceeded) {
           bool isRightDirection = detailsx.delta.dx > 0;
-          widget.onDragAction(horizontalPosition, isRightDirection);
+          widget.onDragAction(horizontalPosition, isRightDirection, durationTime);
         }
 
         isTheresholdExceeded =
@@ -66,10 +67,6 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
         child: Container(
           width: 300.w,
           padding: EdgeInsets.all(AppSpacing.paddingSmallW),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
           child: Text(widget.task.content),
         ),
       ),
@@ -79,12 +76,18 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
           task: widget.task,
           onEdit: widget.onEdit,
           onUpdateTask: widget.onUpdateTask,
+          onUpdateTime: (time) {
+            durationTime = time;
+          },
         ),
       ),
       child: TaskCard(
         task: widget.task,
         onEdit: widget.onEdit,
         onUpdateTask: widget.onUpdateTask,
+        onUpdateTime: (time) {
+          durationTime = time;
+        },
       ),
     );
   }
@@ -94,12 +97,14 @@ class TaskCard extends StatefulWidget {
   final TaskEntity task;
   final VoidCallback onEdit;
   final Function(TaskEntity) onUpdateTask;
+  final Function(int) onUpdateTime;
 
   const TaskCard({
     Key? key,
     required this.task,
     required this.onEdit,
     required this.onUpdateTask,
+    required this.onUpdateTime,
   }) : super(key: key);
 
   @override
@@ -143,7 +148,8 @@ class _TaskCardState extends State<TaskCard> {
       setState(() {
         _seconds++;
       });
-      widget.onUpdateTask(widget.task.copyWith(duration: _seconds));
+      widget.onUpdateTime(_seconds);
+     
     });
   }
 
@@ -152,10 +158,9 @@ class _TaskCardState extends State<TaskCard> {
     setState(() {
       _isRunning = false;
     });
+    widget.onUpdateTime(_seconds);
     widget.onUpdateTask(widget.task.copyWith(duration: _seconds));
   }
-
-  
 
   @override
   void dispose() {
@@ -214,7 +219,9 @@ class _TaskCardState extends State<TaskCard> {
                     IconButton(
                       icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
                       onPressed: _toggleTimer,
-                      tooltip: _isRunning ? LocalizationConstants.pauseTimer.tr() : LocalizationConstants.startTimer.tr(),
+                      tooltip: _isRunning
+                          ? LocalizationConstants.pauseTimer.tr()
+                          : LocalizationConstants.startTimer.tr(),
                     ),
                 ],
               ),

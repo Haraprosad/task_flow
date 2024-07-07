@@ -68,7 +68,9 @@
   "loading_tasks": "Aufgaben werden geladen...",
   "time": "Zeit",
   "pause_timer": "Timer pausieren",
-  "start_timer": "Timer starten"
+  "start_timer": "Timer starten",
+  "there_is_no_task": "Es gibt keine Aufgabe"
+
 
   }
   

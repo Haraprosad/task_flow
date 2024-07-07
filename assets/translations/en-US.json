@@ -68,5 +68,6 @@
   "loading_tasks": "Loading Tasks...",
   "time": "Time",
   "pause_timer": "Pause Timer",
-  "start_timer": "Start Timer"
+  "start_timer": "Start Timer",
+  "there_is_no_task": "There is no task"
 }

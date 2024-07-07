@@ -24,6 +24,7 @@ class _TaskDialogState extends State<TaskDialog> {
   late TextEditingController _titleController;
   late List<String> _comments;
   DateTime? _dueDateTime;
+  final FocusNode _titleFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -36,7 +37,10 @@ class _TaskDialogState extends State<TaskDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.task == null ? LocalizationConstants.addNewTask.tr() : LocalizationConstants.editTask.tr(),
+      title: Text(
+          widget.task == null
+              ? LocalizationConstants.addNewTask.tr()
+              : LocalizationConstants.editTask.tr(),
           style: context.titleLarge),
       content: SingleChildScrollView(
         child: SizedBox(
@@ -45,11 +49,13 @@ class _TaskDialogState extends State<TaskDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(LocalizationConstants.taskTitle.tr(), style: context.titleMedium),
+              Text(LocalizationConstants.taskTitle.tr(),
+                  style: context.titleMedium),
               const SizedBox(height: 8),
               TextField(
                 controller: _titleController,
-                autofocus: true,
+                autofocus: false,
+                focusNode: _titleFocusNode,
                 decoration: InputDecoration(
                   hintText: LocalizationConstants.enterTaskTitle.tr(),
                   border: OutlineInputBorder(),
@@ -60,21 +66,24 @@ class _TaskDialogState extends State<TaskDialog> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(LocalizationConstants.dueDate.tr(), style: context.titleMedium),
+              Text(LocalizationConstants.dueDate.tr(),
+                  style: context.titleMedium),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () => _selectDateTime(context),
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         _dueDateTime != null
-                            ? DateFormat('MMM dd, yyyy HH:mm').format(_dueDateTime!)
+                            ? DateFormat('MMM dd, yyyy HH:mm')
+                                .format(_dueDateTime!)
                             : LocalizationConstants.selectDateAndTime.tr(),
                       ),
                       const Icon(Icons.calendar_today),
@@ -83,7 +92,8 @@ class _TaskDialogState extends State<TaskDialog> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(LocalizationConstants.comments.tr(), style: context.titleMedium),
+              Text(LocalizationConstants.comments.tr(),
+                  style: context.titleMedium),
               const SizedBox(height: 8),
               BulletTextField(
                 initialComments: _comments,
@@ -97,11 +107,14 @@ class _TaskDialogState extends State<TaskDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(LocalizationConstants.cancel.tr(), style: TextStyle(color: context.colorScheme.error)),
+          child: Text(LocalizationConstants.cancel.tr(),
+              style: TextStyle(color: context.colorScheme.error)),
           onPressed: () => Navigator.of(context).pop(),
         ),
         ElevatedButton(
-          child: Text(widget.task == null ? LocalizationConstants.add.tr() : LocalizationConstants.save.tr()),
+          child: Text(widget.task == null
+              ? LocalizationConstants.add.tr()
+              : LocalizationConstants.save.tr()),
           onPressed: () {
             if (_titleController.text.isNotEmpty) {
               final updatedTask = widget.task?.copyWith(
@@ -112,7 +125,8 @@ class _TaskDialogState extends State<TaskDialog> {
                   TaskEntity(
                     id: widget.task?.id ?? const Uuid().v4(),
                     content: _titleController.text,
-                    sectionId: widget.task?.sectionId ?? KeyConstants.todoSectionId,
+                    sectionId:
+                        widget.task?.sectionId ?? KeyConstants.todoSectionId,
                     comments: _comments,
                     duration: 0,
                     due: _dueDateTime,
@@ -126,6 +140,7 @@ class _TaskDialogState extends State<TaskDialog> {
   }
 
   Future<void> _selectDateTime(BuildContext context) async {
+    _titleFocusNode.unfocus();
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _dueDateTime ?? DateTime.now(),
@@ -154,6 +169,7 @@ class _TaskDialogState extends State<TaskDialog> {
   @override
   void dispose() {
     _titleController.dispose();
+    _titleFocusNode.dispose();
     super.dispose();
   }
 }

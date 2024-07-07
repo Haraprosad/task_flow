@@ -69,7 +69,8 @@
    
       "time": "সময়",
       "pause_timer": "টাইমার বিরতি দিন",
-      "start_timer": "টাইমার শুরু করুন"
+      "start_timer": "টাইমার শুরু করুন",
+      "there_is_no_task": "There is no task"
    
     
   }
