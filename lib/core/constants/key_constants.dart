@@ -16,4 +16,5 @@ class KeyConstants {
   static const String doneSectionId = "doneSectionId";
   static const String inProgressSectionId = "inProgressSectionId";
 
+  static const String taskBoxName = 'tasks';
 }

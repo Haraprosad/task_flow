@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/constants/key_constants.dart';
 import 'package:task_flow/core/extensions/color_scheme_extension.dart';
 import 'package:task_flow/core/extensions/text_style_extensions.dart';
+import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/bulleted_text_field.dart';
 import 'package:uuid/uuid.dart';
@@ -34,22 +36,22 @@ class _TaskDialogState extends State<TaskDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.task == null ? 'Add New Task' : 'Edit Task',
+      title: Text(widget.task == null ? LocalizationConstants.addNewTask.tr() : LocalizationConstants.editTask.tr(),
           style: context.titleLarge),
       content: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.maxFinite,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Task Title', style: context.titleMedium),
+              Text(LocalizationConstants.taskTitle.tr(), style: context.titleMedium),
               const SizedBox(height: 8),
               TextField(
                 controller: _titleController,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: 'Enter task title',
+                  hintText: LocalizationConstants.enterTaskTitle.tr(),
                   border: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -58,12 +60,12 @@ class _TaskDialogState extends State<TaskDialog> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Due Date and Time', style: context.titleMedium),
+              Text(LocalizationConstants.dueDate.tr(), style: context.titleMedium),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () => _selectDateTime(context),
                 child: InputDecorator(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
@@ -73,15 +75,15 @@ class _TaskDialogState extends State<TaskDialog> {
                       Text(
                         _dueDateTime != null
                             ? DateFormat('MMM dd, yyyy HH:mm').format(_dueDateTime!)
-                            : 'Select due date and time',
+                            : LocalizationConstants.selectDateAndTime.tr(),
                       ),
-                      Icon(Icons.calendar_today),
+                      const Icon(Icons.calendar_today),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Comments', style: context.titleMedium),
+              Text(LocalizationConstants.comments.tr(), style: context.titleMedium),
               const SizedBox(height: 8),
               BulletTextField(
                 initialComments: _comments,
@@ -95,11 +97,11 @@ class _TaskDialogState extends State<TaskDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Cancel', style: TextStyle(color: context.errorColor)),
+          child: Text(LocalizationConstants.cancel.tr(), style: TextStyle(color: context.colorScheme.error)),
           onPressed: () => Navigator.of(context).pop(),
         ),
         ElevatedButton(
-          child: Text(widget.task == null ? 'Add' : 'Save'),
+          child: Text(widget.task == null ? LocalizationConstants.add.tr() : LocalizationConstants.save.tr()),
           onPressed: () {
             if (_titleController.text.isNotEmpty) {
               final updatedTask = widget.task?.copyWith(

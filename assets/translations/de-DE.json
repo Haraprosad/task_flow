@@ -47,6 +47,28 @@
     "purple": "Lila",
     "language": "Sprache",
     "english": "Englisch",
-    "german": "Deutsch"
+    "german": "Deutsch",
+
+    "kanban_board": "Kanban-Tafel",
+  "todo": "Aufgabe",
+  "in_progress": "In Bearbeitung",
+  "done": "Erledigt",
+  "enter_comments": "Kommentare eingeben",
+  "add_new_task": "Neue Aufgabe hinzufügen",
+  "due_date": "Fälligkeitsdatum",
+  "duration": "Dauer",
+  "comments": "Kommentare",
+  "completed": "Abgeschlossen",
+  "task_title": "Aufgabentitel",
+  "enter_task_title": "Aufgabentitel eingeben",
+  "edit_task": "Aufgabe bearbeiten",
+  "save": "Speichern",
+  "select_date_and_time": "Datum und Uhrzeit auswählen",
+  "add": "Hinzufügen",
+  "loading_tasks": "Aufgaben werden geladen...",
+  "time": "Zeit",
+  "pause_timer": "Timer pausieren",
+  "start_timer": "Timer starten"
+
   }
   

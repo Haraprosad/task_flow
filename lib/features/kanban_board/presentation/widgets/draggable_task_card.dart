@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
+import 'package:task_flow/core/constants/app_spacing.dart';
 import 'package:task_flow/core/constants/key_constants.dart';
 import 'package:task_flow/core/extensions/text_style_extensions.dart';
+import 'package:task_flow/core/l10n/localization_constants.dart';
+import 'package:task_flow/core/utils/format_time.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 
 class DraggableTaskCard extends StatefulWidget {
@@ -31,7 +35,6 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
 
   @override
   void initState() {
-    logger.i("Init state has been called ************");
     isTheresholdExceeded = false;
     horizontalPosition = 0.0;
     super.initState();
@@ -39,23 +42,16 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    logger.e("Build method has been called and ${widget.task} ************");
-    return Draggable<TaskEntity>(
+    return LongPressDraggable<TaskEntity>(
+      delay: const Duration(milliseconds: 300),
       data: widget.task,
       axis: Axis.horizontal,
       onDragUpdate: (details) {
         DragUpdateDetails detailsx = details;
-        logger
-            .e("**************Local*************${detailsx.localPosition.dx}");
-        logger.e(
-            "************Global***************${detailsx.globalPosition.dx}");
-        logger.e("************Source***************${detailsx.delta.dx}");
+        
         horizontalPosition = detailsx.localPosition.dx;
-
-        logger.e(
-            "************isTheresholdExceeded:$isTheresholdExceeded**************");
+      
         if (!isTheresholdExceeded) {
-          logger.e("************Method call***************");
           bool isRightDirection = detailsx.delta.dx > 0;
           widget.onDragAction(horizontalPosition, isRightDirection);
         }
@@ -68,11 +64,11 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
       feedback: Material(
         elevation: 4.0,
         child: Container(
-          width: 300,
-          padding: EdgeInsets.all(16),
+          width: 300.w,
+          padding: EdgeInsets.all(AppSpacing.paddingSmallW),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Text(widget.task.content),
         ),
@@ -159,25 +155,7 @@ class _TaskCardState extends State<TaskCard> {
     widget.onUpdateTask(widget.task.copyWith(duration: _seconds));
   }
 
-  String _formatTime(int seconds) {
-    int hours = seconds ~/ 3600;
-    int minutes = (seconds % 3600) ~/ 60;
-    int remainingSeconds = seconds % 60;
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
-  }
-
-  Color _getCardColor() {
-    switch (widget.task.sectionId) {
-      case KeyConstants.todoSectionId:
-        return Colors.blue[50]!;
-      case KeyConstants.inProgressSectionId:
-        return Colors.amber[50]!;
-      case KeyConstants.doneSectionId:
-        return Colors.green[50]!;
-      default:
-        return Colors.white;
-    }
-  }
+  
 
   @override
   void dispose() {
@@ -190,7 +168,6 @@ class _TaskCardState extends State<TaskCard> {
     return Card(
       margin: EdgeInsets.all(8.0),
       elevation: 2,
-      color: _getCardColor(),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(12.0),
@@ -210,7 +187,7 @@ class _TaskCardState extends State<TaskCard> {
                 IconButton(
                   icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
                   onPressed: widget.onEdit,
-                  tooltip: 'Edit Task',
+                  tooltip: LocalizationConstants.editTask.tr(),
                 ),
               ],
             ),
@@ -219,7 +196,7 @@ class _TaskCardState extends State<TaskCard> {
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
-                  'Due: ${widget.task.due}',
+                  '${LocalizationConstants.dueDate.tr()}: ${widget.task.due}',
                   style: context.bodySmall
                       ?.copyWith(color: Theme.of(context).hintColor),
                 ),
@@ -229,7 +206,7 @@ class _TaskCardState extends State<TaskCard> {
               child: Row(
                 children: [
                   Text(
-                    'Time: ${_formatTime(_seconds)}',
+                    '${LocalizationConstants.time.tr()}: ${formatTime(_seconds)}',
                     style: context.bodyMedium,
                   ),
                   SizedBox(width: 8),
@@ -237,7 +214,7 @@ class _TaskCardState extends State<TaskCard> {
                     IconButton(
                       icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
                       onPressed: _toggleTimer,
-                      tooltip: _isRunning ? 'Pause Timer' : 'Start Timer',
+                      tooltip: _isRunning ? LocalizationConstants.pauseTimer.tr() : LocalizationConstants.startTimer.tr(),
                     ),
                 ],
               ),
@@ -247,7 +224,7 @@ class _TaskCardState extends State<TaskCard> {
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
-                  'Completed: ${DateFormat('yyyy-MM-dd HH:mm').format(widget.task.completedAt!)}',
+                  '${LocalizationConstants.completed.tr()}: ${DateFormat('yyyy-MM-dd HH:mm').format(widget.task.completedAt!)}',
                   style: context.bodySmall
                       ?.copyWith(color: Theme.of(context).hintColor),
                 ),
@@ -255,7 +232,7 @@ class _TaskCardState extends State<TaskCard> {
             SizedBox(height: 8.0),
             if (widget.task.comments.isNotEmpty) ...[
               Text(
-                'Comments:',
+                '${LocalizationConstants.comments.tr()}:',
                 style:
                     context.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),

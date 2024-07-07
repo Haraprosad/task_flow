@@ -47,5 +47,26 @@
   "purple": "Purple",
   "language": "Language",
   "english": "English",
-  "german": "German"
+  "german": "German",
+
+  "kanban_board": "Kanban Board",
+  "todo": "Todo",
+  "in_progress": "In Progress",
+  "done": "Done",
+  "enter_comments": "Enter Comments",
+  "add_new_task": "Add New Task",
+  "due_date": "Due Date",
+  "duration": "Duration",
+  "comments": "Comments",
+  "completed": "Completed",
+  "task_title": "Task Title",
+  "enter_task_title": "Enter Task Title",
+  "edit_task": "Edit Task",
+  "save": "Save",
+  "select_date_and_time": "Select Date and Time",
+  "add": "Add",
+  "loading_tasks": "Loading Tasks...",
+  "time": "Time",
+  "pause_timer": "Pause Timer",
+  "start_timer": "Start Timer"
 }

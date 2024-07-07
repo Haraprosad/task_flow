@@ -4,7 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/config/observers/bloc_observer.dart';
 import 'package:task_flow/core/constants/key_constants.dart';
@@ -16,6 +19,7 @@ import 'package:task_flow/core/theme/app_theme.dart';
 import 'package:task_flow/core/theme/theme_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:task_flow/core/theme/theme_cubit.dart';
+import 'package:task_flow/features/kanban_board/data/models/task_model.dart';
 import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
 import 'package:task_flow/flavors/env_config.dart';
 import 'package:task_flow/flavors/environment.dart';
@@ -25,6 +29,14 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     configureDependencies();
+
+    // Initialize Hive
+      final dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
+      Hive.registerAdapter(TaskModelAdapter());
+      await Hive.openBox<TaskModel>(KeyConstants.taskBoxName);
+
+    
 
     //Environment part
     await dotenv.load(fileName: KeyConstants.envProduction);
@@ -49,6 +61,7 @@ void main() async {
         supportedLocales: AppLocalizations.getSupportedLocales(),
         startLocale: AppLocalizations.startLocale,
         fallbackLocale: AppLocalizations.fallbackLocale,
+       
         path: AppLocalizations.localPath,
         child: const MyApp(),
       ),
@@ -130,9 +143,9 @@ class MyApp extends StatelessWidget {
               BlocProvider<ThemeCubit>(
                 create: (_) => ThemeCubit(),
               ),
-              BlocProvider<KanbanBoardBloc>(
-                create: (_) => sl<KanbanBoardBloc>(),
-              ),
+              BlocProvider(
+                create: (_) => sl<KanbanBoardBloc>()..add(const LoadTasks("")),
+              )
             ],
             child: BlocBuilder<ThemeCubit, AppTheme>(
               builder: (context, appTheme) {
@@ -143,6 +156,8 @@ class MyApp extends StatelessWidget {
                   localizationsDelegates: context.localizationDelegates,
                   supportedLocales: context.supportedLocales,
                   locale: context.locale,
+                  builder: EasyLoading.init(),
+                  
                 );
               },
             ),

@@ -1,6 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_flow/core/l10n/localization_constants.dart';
 
 class BulletTextField extends StatefulWidget {
   final void Function(List<String>) onChanged;
@@ -53,12 +53,12 @@ class _BulletTextFieldState extends State<BulletTextField> {
     return TextField(
       controller: _controller,
       decoration: InputDecoration(
-        hintText: 'Enter comments',
+        hintText: LocalizationConstants.enterComments,
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Theme.of(context).primaryColor,
-            width: 2.0,
+            width: 2.0.w,
           ),
         ),
       ),

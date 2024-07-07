@@ -47,6 +47,30 @@
     "purple": "বেগুনি",
     "language": "ভাষা",
     "english": "ইংরেজি",
-    "german": "জার্মান"
+    "german": "জার্মান",
+
+  "kanban_board": "কানবান বোর্ড",
+  "todo": "তালিকা",
+  "in_progress": "চলমান",
+  "done": "সম্পন্ন",
+  "enter_comments": "মন্তব্য লিখুন",
+    "add_new_task": "নতুন কাজ যোগ করুন",
+    "due_date": "নির্দিষ্ট তারিখ",
+    "duration": "সময়কাল",
+    "comments": "মন্তব্য",
+    "completed": "সম্পূর্ণ",
+    "task_title": "কাজের শিরোনাম",
+    "enter_task_title": "কাজের শিরোনাম লিখুন",
+    "edit_task": "কাজ সম্পাদনা করুন",
+    "save": "সংরক্ষণ",
+    "select_date_and_time": "তারিখ এবং সময় নির্বাচন করুন",
+    "add": "যোগ করুন",
+    "loading_tasks": "কাজগুলি লোড হচ্ছে...",
+   
+      "time": "সময়",
+      "pause_timer": "টাইমার বিরতি দিন",
+      "start_timer": "টাইমার শুরু করুন"
+   
+    
   }
   

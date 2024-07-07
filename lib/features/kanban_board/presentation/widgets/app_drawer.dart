@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_flow/core/constants/asset_constants.dart';
 import 'package:task_flow/core/constants/string_constants.dart';
 import 'package:task_flow/core/l10n/app_localizations.dart';
@@ -27,17 +28,17 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text(LocalizationConstants.home).tr(),
+            title: const Text(LocalizationConstants.home).tr(),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ExpansionTile(
-            title: Text(LocalizationConstants.theme).tr(),
+            title: const Text(LocalizationConstants.theme).tr(),
             children: _buildThemeListTiles(context),
           ),
           ExpansionTile(
-            title: Text(LocalizationConstants.language).tr(),
+            title: const Text(LocalizationConstants.language).tr(),
             children: _buildLanguageListTiles(context),
           ),
         ],
@@ -60,7 +61,7 @@ class AppDrawer extends StatelessWidget {
       title: Row(
         children: [
           CircleAvatar(backgroundColor: color, radius: 8),
-          SizedBox(width: 8),
+          SizedBox(width: 8.w),
           Text(title).tr(),
         ],
       ),
