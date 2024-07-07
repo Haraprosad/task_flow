@@ -9,10 +9,13 @@ class AppLocalizations {
   // Supported locales
   static const Locale englishLocale = Locale('en', 'US');
   static const Locale bengaliLocale = Locale('bn', 'BD');
+  static const Locale germanLocale = Locale('de', 'DE');
+
 
   static const List<Locale> _supportedLocales = [
     englishLocale,
     bengaliLocale,
+    germanLocale
   ];
 
   static List<Locale> getSupportedLocales() => _supportedLocales;

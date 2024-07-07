@@ -1,11 +1,18 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/constants/asset_constants.dart';
 import 'package:task_flow/core/constants/key_constants.dart';
+import 'package:task_flow/core/constants/string_constants.dart';
 import 'package:task_flow/core/extensions/color_scheme_extension.dart';
+import 'package:task_flow/core/l10n/app_localizations.dart';
+import 'package:task_flow/core/l10n/localization_constants.dart';
+import 'package:task_flow/core/theme/app_theme.dart';
+import 'package:task_flow/core/theme/theme_cubit.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
+import 'package:task_flow/features/kanban_board/presentation/widgets/app_drawer.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/kanban_section.dart';
 import 'package:task_flow/features/kanban_board/presentation/widgets/task_dialog.dart';
 import 'package:task_flow/flavors/env_config.dart';
@@ -64,35 +71,7 @@ class _KanbanBoardState extends State<KanbanBoard>
     ];
 
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: context.primaryColor,
-              ),
-              child: Column(
-                children: [
-                  Image.asset(AssetConstants.logo, height: 100),
-                ],
-              ),
-            ),
-            ListTile(
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: const Text('Kanban Board'),
         bottom: TabBar(
@@ -108,8 +87,10 @@ class _KanbanBoardState extends State<KanbanBoard>
               return KanbanSection(
                 title: section.title,
                 sectionId: section.id,
-                onUpdateTask: ((updatedTask){
-                  context.read<KanbanBoardBloc>().add(UpdateExistingTask(updatedTask));
+                onUpdateTask: ((updatedTask) {
+                  context
+                      .read<KanbanBoardBloc>()
+                      .add(UpdateExistingTask(updatedTask));
                 }),
                 tasks: tasks
                     .where((task) => task.sectionId == section.id)
@@ -158,12 +139,26 @@ class _KanbanBoardState extends State<KanbanBoard>
       }
 
       final newSectionId = sections[nextIndex];
+
       if (newSectionId != currentSectionId) {
-        context.read<KanbanBoardBloc>().add(
-              MoveTask(
-                newTaskEntity: task.copyWith(sectionId: newSectionId),
-              ),
-            );
+        if (newSectionId == KeyConstants.doneSectionId) {
+          logger.i("Task has been completed.********");
+
+          context.read<KanbanBoardBloc>().add(
+                MoveTask(
+                  newTaskEntity: task.copyWith(
+                      sectionId: newSectionId,
+                      isCompleted: true,
+                      completedAt: DateTime.now()),
+                ),
+              );
+        } else {
+          context.read<KanbanBoardBloc>().add(
+                MoveTask(
+                  newTaskEntity: task.copyWith(sectionId: newSectionId),
+                ),
+              );
+        }
       }
       _tabController.animateTo(nextIndex);
     }
@@ -178,6 +173,83 @@ class _KanbanBoardState extends State<KanbanBoard>
           context.read<KanbanBoardBloc>().add(UpdateExistingTask(updatedTask));
           Navigator.of(context).pop();
         },
+      ),
+    );
+  }
+
+  //Drawer design
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: context.primaryColor,
+            ),
+            child: Column(
+              children: [
+                Image.asset(AssetConstants.logo, height: 100),
+              ],
+            ),
+          ),
+          ListTile(
+            title: const Text(LocalizationConstants.home).tr(),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ExpansionTile(
+            title: Text(LocalizationConstants.theme).tr(),
+            children: [
+              ListTile(
+                title: Text(LocalizationConstants.lightBlue).tr(),
+                onTap: () =>
+                    context.read<ThemeCubit>().setTheme(AppTheme.lightBlue),
+              ),
+              ListTile(
+                title: Text(LocalizationConstants.darkBlue).tr(),
+                onTap: () =>
+                    context.read<ThemeCubit>().setTheme(AppTheme.darkBlue),
+              ),
+              ListTile(
+                title: Text(LocalizationConstants.lightGreen).tr(),
+                onTap: () =>
+                    context.read<ThemeCubit>().setTheme(AppTheme.lightGreen),
+              ),
+              ListTile(
+                title: Text(LocalizationConstants.darkGreen).tr(),
+                onTap: () =>
+                    context.read<ThemeCubit>().setTheme(AppTheme.darkGreen),
+              ),
+              ListTile(
+                title: Text(LocalizationConstants.purple).tr(),
+                onTap: () =>
+                    context.read<ThemeCubit>().setTheme(AppTheme.purple),
+              ),
+            ],
+          ),
+          ExpansionTile(
+            title: Text(LocalizationConstants.language).tr(),
+            children: [
+              ListTile(
+                title: Text(StringConstants.english),
+                onTap: () => AppLocalizations.changeLocale(
+                    context, AppLocalizations.englishLocale),
+              ),
+              ListTile(
+                title: Text(StringConstants.german),
+                onTap: () => AppLocalizations.changeLocale(
+                    context, AppLocalizations.germanLocale),
+              ),
+              ListTile(
+                title: Text(StringConstants.bengali),
+                onTap: () => AppLocalizations.changeLocale(
+                    context, AppLocalizations.bengaliLocale),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -38,10 +38,12 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     return remoteTasks.map((remoteTask) {
       final localTask = localTaskMap[remoteTask.id];
       return TaskModel.fromJson(
-        remoteTask.toJson(),
+        remoteTask.toJsonRemote(),
         sectionId: localTask?.sectionId,
         comments: localTask?.comments,
         duration: localTask?.duration,
+        isCompleted: localTask?.isCompleted,
+        completedAt: localTask?.completedAt,
         dueDate: localTask?.due ?? remoteTask.due,
       );
     }).toList();
@@ -59,6 +61,8 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
           final remoteTask = TaskModel.fromJson(data,
               sectionId: task.sectionId,
               comments: task.comments,
+              completedAt: task.completedAt,
+              isCompleted: task.isCompleted,
               duration: task.duration,
               dueDate: task.due);
           await _localDataSource.addTask(remoteTask);
@@ -105,10 +109,13 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
       return response.fold(
         (error) => throw error,
         (data) async {
+          logger.d("Task updated remote api successfully and task: $task");
           final remoteTask = TaskModel.fromJson(data,
               sectionId: task.sectionId,
               comments: task.comments,
               duration: task.duration,
+              completedAt: task.completedAt,
+              isCompleted: task.isCompleted,
               dueDate: task.due);
           await _localDataSource.updateTask(remoteTask);
           return remoteTask;

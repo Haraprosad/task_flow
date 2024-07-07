@@ -44,4 +44,16 @@ class LocalizationConstants {
   // Other
   static const String tryAgainLater = "try_again_later";
   static const String taskFlow = "task_flow";
+
+  static const String home = "home";
+  static const String theme = "theme";
+  static const String lightBlue = "light_blue";
+  static const String darkBlue = "dark_blue";
+  static const String lightGreen = "light_green";
+  static const String darkGreen = "dark_green";
+  static const String purple = "purple";
+  static const String language = "language";
+  static const String english = "english";
+  static const String german = "german";
+ 
 }

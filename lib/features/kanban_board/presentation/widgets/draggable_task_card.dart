@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:task_flow/core/config/loggers/logger_config.dart';
 import 'package:task_flow/core/constants/key_constants.dart';
@@ -38,7 +39,7 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    logger.e("Build method has been called ************");
+    logger.e("Build method has been called and ${widget.task} ************");
     return Draggable<TaskEntity>(
       data: widget.task,
       axis: Axis.horizontal,
@@ -78,9 +79,17 @@ class _DraggableTaskCardState extends State<DraggableTaskCard> {
       ),
       childWhenDragging: Opacity(
         opacity: 0.5,
-        child: TaskCard(task: widget.task, onEdit: widget.onEdit,onUpdateTask: widget.onUpdateTask,),
+        child: TaskCard(
+          task: widget.task,
+          onEdit: widget.onEdit,
+          onUpdateTask: widget.onUpdateTask,
+        ),
       ),
-      child: TaskCard(task: widget.task, onEdit: widget.onEdit,onUpdateTask: widget.onUpdateTask,),
+      child: TaskCard(
+        task: widget.task,
+        onEdit: widget.onEdit,
+        onUpdateTask: widget.onUpdateTask,
+      ),
     );
   }
 }
@@ -194,7 +203,8 @@ class _TaskCardState extends State<TaskCard> {
                 Expanded(
                   child: Text(
                     widget.task.content,
-                    style: context.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
@@ -204,12 +214,14 @@ class _TaskCardState extends State<TaskCard> {
                 ),
               ],
             ),
-            if (widget.task.due != null)
+            if (widget.task.due != null &&
+                widget.task.sectionId != KeyConstants.doneSectionId)
               Padding(
                 padding: EdgeInsets.only(top: 4.0),
                 child: Text(
                   'Due: ${widget.task.due}',
-                  style: context.bodySmall?.copyWith(color: Theme.of(context).hintColor),
+                  style: context.bodySmall
+                      ?.copyWith(color: Theme.of(context).hintColor),
                 ),
               ),
             Padding(
@@ -230,24 +242,37 @@ class _TaskCardState extends State<TaskCard> {
                 ],
               ),
             ),
+            if (widget.task.sectionId == KeyConstants.doneSectionId &&
+                widget.task.completedAt != null)
+              Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: Text(
+                  'Completed: ${DateFormat('yyyy-MM-dd HH:mm').format(widget.task.completedAt!)}',
+                  style: context.bodySmall
+                      ?.copyWith(color: Theme.of(context).hintColor),
+                ),
+              ),
             SizedBox(height: 8.0),
             if (widget.task.comments.isNotEmpty) ...[
               Text(
                 'Comments:',
-                style: context.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                style:
+                    context.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 4.0),
               ...widget.task.comments.map((comment) => Padding(
-                padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.circle, size: 8, color: Theme.of(context).primaryColor),
-                    SizedBox(width: 8),
-                    Expanded(child: Text(comment, style: context.bodySmall)),
-                  ],
-                ),
-              )),
+                    padding: EdgeInsets.only(left: 16.0, bottom: 4.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.circle,
+                            size: 8, color: Theme.of(context).primaryColor),
+                        SizedBox(width: 8),
+                        Expanded(
+                            child: Text(comment, style: context.bodySmall)),
+                      ],
+                    ),
+                  )),
             ],
           ],
         ),

@@ -1,4 +1,4 @@
-class KeyConstants{
+class KeyConstants {
   //Flavors related constants
   static const String envDevelopment = ".env.development";
   static const String envProduction = ".env.production";
@@ -15,4 +15,5 @@ class KeyConstants{
   static const String todoSectionId = "todoSectionId";
   static const String doneSectionId = "doneSectionId";
   static const String inProgressSectionId = "inProgressSectionId";
+
 }

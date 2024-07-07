@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:task_flow/core/constants/key_constants.dart';
 import 'package:task_flow/features/kanban_board/domain/entities/task_entity.dart';
 
 part 'task_model.g.dart';
@@ -55,38 +56,37 @@ class TaskModel extends TaskEntity {
     int? duration,
     DateTime? dueDate,
     DateTime? completedAt,
+    bool? isCompleted,
   }) {
     return TaskModel(
       id: json['id'],
-      isCompleted: json['is_completed'] ?? false,
       content: json['content'] ?? "",
       due: dueDate,
-      sectionId: sectionId ?? 'todo',
+      sectionId: sectionId ?? KeyConstants.todoSectionId,
       comments: comments ?? [],
       duration: duration ?? 0,
+      isCompleted: isCompleted,
       completedAt: completedAt,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'is_completed': isCompleted,
-      'content': content,
-      'due': due?.toIso8601String(),
-      'section_id': sectionId,
-      'comments': comments,
-      'duration': duration,
-      'completed_at': completedAt?.toIso8601String(),
-    };
-  }
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'id': id,
+  //     'is_completed': isCompleted,
+  //     'content': content,
+  //     'due': due?.toIso8601String(),
+  //     'section_id': sectionId,
+  //     'comments': comments,
+  //     'duration': duration,
+  //     'completed_at': completedAt?.toIso8601String(),
+  //   };
+  // }
 
   Map<String, dynamic> toJsonRemote() {
     return {
       'id': id,
-      'is_completed': isCompleted,
       'content': content,
-      'completed_at': completedAt?.toIso8601String(),
     };
   }
 }

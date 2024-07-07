@@ -12,12 +12,13 @@ import 'package:task_flow/core/di/injection.dart';
 import 'package:task_flow/core/l10n/localization_constants.dart';
 import 'package:task_flow/core/router/app_router.dart';
 import 'package:task_flow/core/l10n/app_localizations.dart';
+import 'package:task_flow/core/theme/app_theme.dart';
 import 'package:task_flow/core/theme/theme_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:task_flow/core/theme/theme_cubit.dart';
 import 'package:task_flow/features/kanban_board/presentation/bloc/kanban_board_bloc.dart';
 import 'package:task_flow/flavors/env_config.dart';
 import 'package:task_flow/flavors/environment.dart';
-
 
 void main() async {
   runZonedGuarded(() async {
@@ -124,17 +125,26 @@ class MyApp extends StatelessWidget {
         designSize: const Size(375, 812),
         minTextAdapt: true,
         builder: (_, child) {
-          return BlocProvider<KanbanBoardBloc>(
-            create: (_) => sl<KanbanBoardBloc>(),
-            child: MaterialApp.router(
-              title: "Task Flow",
-              routerConfig: AppRouter.routerConfig,
-              theme: ThemeConfig.lightTheme,
-              darkTheme: ThemeConfig.darkTheme,
-              themeMode: ThemeMode.system,
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>(
+                create: (_) => ThemeCubit(),
+              ),
+              BlocProvider<KanbanBoardBloc>(
+                create: (_) => sl<KanbanBoardBloc>(),
+              ),
+            ],
+            child: BlocBuilder<ThemeCubit, AppTheme>(
+              builder: (context, appTheme) {
+                return MaterialApp.router(
+                  title: "Task Flow",
+                  routerConfig: AppRouter.routerConfig,
+                  theme: ThemeConfig.themeData[appTheme],
+                  localizationsDelegates: context.localizationDelegates,
+                  supportedLocales: context.supportedLocales,
+                  locale: context.locale,
+                );
+              },
             ),
           );
         });

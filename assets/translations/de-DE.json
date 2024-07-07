@@ -1,0 +1,52 @@
+{
+    "error_messages": {
+      "network_error": "Verbindung zum Server konnte nicht hergestellt werden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+      "connection_timeout_error": "Die Verbindung wurde unterbrochen. Bitte versuchen Sie es später erneut.",
+      "send_timeout_error": "Die Sendung wurde unterbrochen. Bitte versuchen Sie es später erneut.",
+      "receive_timeout_error": "Der Empfang wurde unterbrochen. Bitte versuchen Sie es später erneut.",
+      "server_error": "Ein unerwarteter Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+      "authentication_error": "Authentifizierung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut.",
+      "authorization_error": "Sie haben keine Berechtigung, diese Aktion durchzuführen.",
+      "not_found_error": "Die angeforderte Ressource wurde nicht gefunden.",
+      "validation_error": "Die übermittelten Daten sind ungültig. Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut.",
+      "rate_limit_error": "Sie haben die Rate-Limit überschritten. Bitte versuchen Sie es später erneut.",
+      "bad_request_error": "Die Anfrage war ungültig oder kann nicht bedient werden.",
+      "conflict_error": "Die Anfrage konnte aufgrund eines Konflikts mit dem aktuellen Zustand der Ressource nicht abgeschlossen werden.",
+      "service_unavailable": "Der Dienst ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
+      "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+      "parsing_error": "Die Serverantwort konnte nicht verarbeitet werden. Bitte versuchen Sie es später erneut.",
+      "offline_error": "Sie sind derzeit offline. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+      "api_deprecated": "Diese API-Version ist veraltet. Bitte aktualisieren Sie Ihre Anwendung.",
+      "maintenance_error": "Der Dienst wird derzeit gewartet. Bitte versuchen Sie es später erneut.",
+      "quota_exceeded": "Ihr API-Kontingent wurde überschritten. Bitte versuchen Sie es später erneut oder aktualisieren Sie Ihren Plan.",
+      "bad_certificate_error": "Das Zertifikat des Servers ist ungültig. Bitte versuchen Sie es später erneut.",
+      "forbidden_error": "Der Zugriff auf die angeforderte Ressource ist verboten. Bitte stellen Sie sicher, dass Sie die richtige Berechtigung haben, um diese Aktion durchzuführen."
+    },
+    "error_actions": {
+      "try_again": "Erneut versuchen",
+      "cancel": "Abbrechen",
+      "go_back": "Zurück",
+      "refresh": "Aktualisieren",
+      "contact_support": "Support kontaktieren"
+    },
+    "error_titles": {
+      "connection_error": "Verbindungsfehler",
+      "server_error": "Serverfehler",
+      "client_error": "Client-Fehler",
+      "authentication_error": "Authentifizierungsfehler",
+      "unknown_error": "Unbekannter Fehler"
+    },
+    "try_again_later": "Bitte versuchen Sie es später erneut.",
+    "task_flow": "Task Flow",
+    "home": "Startseite",
+    "theme": "Thema",
+    "lightBlue": "Hellblau",
+    "darkBlue": "Dunkelblau",
+    "lightGreen": "Hellgrün",
+    "darkGreen": "Dunkelgrün",
+    "purple": "Lila",
+    "language": "Sprache",
+    "english": "Englisch",
+    "german": "Deutsch"
+  }
+  

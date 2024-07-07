@@ -20,6 +20,7 @@ class TaskRepositoryImpl implements TaskRepository {
       final taskModel = TaskModel(
         id: task.id,
         isCompleted: task.isCompleted,
+        completedAt: task.completedAt,
         content: task.content,
         sectionId: task.sectionId ?? 'todo',
         due: task.due,
@@ -50,6 +51,7 @@ class TaskRepositoryImpl implements TaskRepository {
         id: task.id,
         isCompleted: task.isCompleted,
         content: task.content,
+        completedAt: task.completedAt,
         sectionId: task.sectionId ?? 'todo',
         due: task.due,
         comments: task.comments ?? [],

@@ -37,5 +37,15 @@
       "unknown_error": "Unknown Error"
   },
   "try_again_later": "Please try again later.",
-  "task_flow": "Task Flow"
+  "task_flow": "Task Flow",
+  "home": "Home",
+  "theme": "Theme",
+  "lightBlue": "Light Blue",
+  "darkBlue": "Dark Blue",
+  "lightGreen": "Light Green",
+  "darkGreen": "Dark Green",
+  "purple": "Purple",
+  "language": "Language",
+  "english": "English",
+  "german": "German"
 }
